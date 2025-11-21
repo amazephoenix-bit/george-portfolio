@@ -719,6 +719,7 @@
           <ul>
             <li>
               <strong>Python</strong>
+<<<<<<< HEAD
               <span class="project-meta">
                  Comfortable writing scripts, functions, and working with data.
               </span>
@@ -844,6 +845,127 @@
         });
       }
 
+=======
+              <span class="project-meta">Comfortable writing scripts, functions, and working with data.</span>
+            </li>
+            <li>
+              <strong>NumPy</strong>
+              <span class="project-meta">Working with arrays, numerical operations, basic linear algebra.</span>
+            </li>
+            <li>
+              <strong>Pandas</strong>
+              <span class="project-meta">DataFrames, cleaning data, filtering, grouping, basic analysis.</span>
+            </li>
+            <li>
+              <strong>Matplotlib</strong>
+              <span class="project-meta">Creating basic plots, line charts, bar charts, and visualizing data.</span>
+            </li>
+            <li>
+              <strong>Seaborn</strong>
+              <span class="project-meta">Nicer statistical visualizations on top of Matplotlib.</span>
+            </li>
+            <li>
+              <strong>Machine Learning (learning)</strong>
+              <span class="project-meta">Starting with ML concepts and small projects. I’ll keep updating this as I build more.</span>
+            </li>
+          </ul>
+        `,
+      },
+      projects: {
+        badge: "Projects House",
+        title: "Projects (More Coming Soon)",
+        subtitle:
+          "I'm working on machine learning and data projects. This section will grow as I build more.",
+        chips: ["Machine Learning", "Data"],
+        html: `
+          <p class="info-tagline">I’m still building and polishing my projects.</p>
+          <ul>
+            <li>
+              <span class="project-title">Machine Learning Project (Coming Soon)</span>
+              <span class="project-meta">Python • NumPy • Pandas • Matplotlib</span>
+              <span class="project-meta">
+                A project to apply what I’m learning in ML. I’ll update this with details and a link soon.
+              </span>
+              <span class="project-link">(Link will be added here later)</span>
+            </li>
+          </ul>
+        `,
+      },
+      about: {
+        badge: "About House",
+        title: "About George",
+        subtitle:
+          "A quick look at who I am, how I think, and what I'm aiming for.",
+        chips: ["Python Dev", "Data & ML"],
+        html: `
+          <p class="info-tagline">The cozy house where my story lives.</p>
+          <ul>
+            <li>
+              <strong>Who I am</strong>
+              <span class="project-meta">
+                A learner focused on Python, data analysis, and starting with machine learning.
+              </span>
+            </li>
+            <li>
+              <strong>How I think</strong>
+              <span class="project-meta">
+                I like understanding data, visualizing it clearly, and improving step by step.
+              </span>
+            </li>
+            <li>
+              <strong>What I'm building towards</strong>
+              <span class="project-meta">
+                Getting better at real-world ML and data projects, and building a strong portfolio.
+              </span>
+            </li>
+            <li>
+              <strong>Contact</strong>
+              <span class="project-meta">Email: [add your email here]</span>
+              <span class="project-meta">GitHub / LinkedIn: [add your links here]</span>
+            </li>
+          </ul>
+        `,
+      },
+    };
+
+    // ====== DOM setup & events ======
+    document.addEventListener("DOMContentLoaded", () => {
+      const introScreen = document.getElementById("introScreen");
+      const enterBtn = document.getElementById("enterBtn");
+      const houses = document.querySelectorAll(".house");
+
+      const infoBadge = document.getElementById("infoBadge");
+      const infoTitle = document.getElementById("infoTitle");
+      const infoSubtitle = document.getElementById("infoSubtitle");
+      const infoContent = document.getElementById("infoContent");
+      const infoTabsContainer = document.querySelector(".info-tabs");
+
+      function openHouse(key) {
+        const data = houseContent[key];
+        if (!data) return;
+
+        // active state on houses
+        houses.forEach((h) => h.classList.remove("active"));
+        const activeHouse = document.querySelector(`.house[data-key="${key}"]`);
+        if (activeHouse) activeHouse.classList.add("active");
+
+        // update info panel
+        infoBadge.textContent = data.badge;
+        infoTitle.textContent = data.title;
+        infoSubtitle.textContent = data.subtitle;
+        infoContent.innerHTML = data.html;
+
+        // update chips
+        infoTabsContainer.innerHTML = "";
+        (data.chips || []).forEach((chip) => {
+          const span = document.createElement("div");
+          span.className = "info-chip";
+          span.textContent = chip;
+          infoTabsContainer.appendChild(span);
+        });
+      }
+
+>>>>>>> 5b5b8b9903d51dfcbe0fccb65bc9c241b365ab4c
       // Intro button
       enterBtn.addEventListener("click", () => {
         introScreen.classList.add("hidden");

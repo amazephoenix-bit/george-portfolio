@@ -114,7 +114,7 @@
     }
 
     .hidden {
-      display: none;
+      display: none !important;
     }
 
     @keyframes fadeIn {
@@ -178,6 +178,12 @@
       border-radius: 999px;
       background: #22c55e;
       box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
     }
 
     /* Scene */
@@ -218,6 +224,7 @@
       background-size: 120px 120px, 140px 140px, 160px 160px;
       background-position: 0 0, 20px 40px, 60px 20px;
       opacity: 0.5;
+      pointer-events: none;
     }
 
     .sky-stars::after {
@@ -234,6 +241,7 @@
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #fde68a, #fbbf24);
       box-shadow: 0 0 32px rgba(251, 191, 36, 0.65);
+      pointer-events: none;
     }
 
     .ground {
@@ -244,6 +252,7 @@
       background: linear-gradient(180deg, #064e3b, #022c22);
       border-top: 1px solid rgba(16, 185, 129, 0.6);
       box-shadow: 0 -12px 25px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
     }
 
     .ground-strip {
@@ -255,6 +264,7 @@
       background: radial-gradient(circle at top, #022c22, #052e16);
       border: 1px solid rgba(21, 128, 61, 0.7);
       box-shadow: 0 8px 20px rgba(6, 95, 70, 0.7);
+      pointer-events: none;
     }
 
     .houses-row {
@@ -265,6 +275,7 @@
       justify-content: space-between;
       align-items: flex-end;
       gap: 10px;
+      z-index: 5;
     }
 
     @media (max-width: 600px) {
@@ -288,6 +299,8 @@
       transition: transform 0.18s ease-out, box-shadow 0.18s ease-out,
         border-color 0.18s ease-out, background 0.18s ease-out;
       text-align: center;
+      user-select: none;
+      z-index: 10;
     }
 
     .house::before {
@@ -300,6 +313,7 @@
       border-right: 40px solid transparent;
       border-bottom: 26px solid #1f2937;
       filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.7));
+      pointer-events: none;
     }
 
     .house-label {
@@ -308,12 +322,14 @@
       text-transform: uppercase;
       letter-spacing: 0.09em;
       opacity: 0.82;
+      pointer-events: none;
     }
 
     .house-tag {
       margin-top: 4px;
       font-size: 0.7rem;
       opacity: 0.7;
+      pointer-events: none;
     }
 
     .house-door {
@@ -324,6 +340,7 @@
       background: linear-gradient(180deg, #020617, #020617);
       border: 1px solid rgba(148, 163, 184, 0.5);
       position: relative;
+      pointer-events: none;
     }
 
     .house-door::after {
@@ -352,6 +369,11 @@
     .house:hover {
       transform: translateY(-4px) scale(1.01);
       box-shadow: 0 14px 28px rgba(15, 23, 42, 0.9);
+      border-color: rgba(148, 163, 184, 0.95);
+    }
+
+    .house:active {
+      transform: translateY(-2px) scale(1.0);
     }
 
     /* Character */
@@ -364,8 +386,9 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      z-index: 2;
+      z-index: 3;
       animation: float 2.4s ease-in-out infinite;
+      pointer-events: none;
     }
 
     @keyframes float {
@@ -711,141 +734,13 @@
       skills: {
         badge: "Skills House",
         title: "Skills & Stack",
-        subtitle:
-          "These are the main technologies and tools I work with right now.",
+        subtitle: "These are the main technologies and tools I work with right now.",
         chips: ["Python", "Data Analysis", "Visualization"],
         html: `
           <p class="info-tagline">My main focus is Python and data-related work.</p>
           <ul>
             <li>
               <strong>Python</strong>
-<<<<<<< HEAD
-              <span class="project-meta">
-                 Comfortable writing scripts, functions, and working with data.
-              </span>
-              <span class="project-meta">
-                 <em>Project:</em> Built a [your project name] that [short description].
-              </span>
-            </li>
-
-            <li>
-              <strong>NumPy</strong>
-              <span class="project-meta">Working with arrays, numerical operations, basic linear algebra.</span>
-            </li>
-            <li>
-              <strong>Pandas</strong>
-              <span class="project-meta">DataFrames, cleaning data, filtering, grouping, basic analysis.</span>
-            </li>
-            <li>
-              <strong>Matplotlib</strong>
-              <span class="project-meta">Creating basic plots, line charts, bar charts, and visualizing data.</span>
-            </li>
-            <li>
-              <strong>Seaborn</strong>
-              <span class="project-meta">Nicer statistical visualizations on top of Matplotlib.</span>
-            </li>
-            <li>
-              <strong>Machine Learning (learning)</strong>
-              <span class="project-meta">Starting with ML concepts and small projects. I’ll keep updating this as I build more.</span>
-            </li>
-          </ul>
-        `,
-      },
-      projects: {
-        badge: "Projects House",
-        title: "Projects (More Coming Soon)",
-        subtitle:
-          "I'm working on machine learning and data projects. This section will grow as I build more.",
-        chips: ["Machine Learning", "Data"],
-        html: `
-          <p class="info-tagline">I’m still building and polishing my projects.</p>
-          <ul>
-            <li>
-              <span class="project-title">Machine Learning Project (Coming Soon)</span>
-              <span class="project-meta">Python • NumPy • Pandas • Matplotlib</span>
-              <span class="project-meta">
-                A project to apply what I’m learning in ML. I’ll update this with details and a link soon.
-              </span>
-              <span class="project-link">(Link will be added here later)</span>
-            </li>
-          </ul>
-        `,
-      },
-      about: {
-        badge: "About House",
-        title: "About George",
-        subtitle:
-          "A quick look at who I am, how I think, and what I'm aiming for.",
-        chips: ["Python Dev", "Data & ML"],
-        html: `
-          <p class="info-tagline">The cozy house where my story lives.</p>
-          <ul>
-            <li>
-              <strong>Who I am</strong>
-              <span class="project-meta">
-                A learner focused on Python, data analysis, and starting with machine learning.
-              </span>
-            </li>
-            <li>
-              <strong>How I think</strong>
-              <span class="project-meta">
-                I like understanding data, visualizing it clearly, and improving step by step.
-              </span>
-            </li>
-            <li>
-              <strong>What I'm building towards</strong>
-              <span class="project-meta">
-                Getting better at real-world ML and data projects, and building a strong portfolio.
-              </span>
-            </li>
-            <li>
-              <strong>Contact</strong>
-              <span class="project-meta">Email: [add your email here]</span>
-              <span class="project-meta">GitHub / LinkedIn: [add your links here]</span>
-            </li>
-          </ul>
-        `,
-      },
-    };
-
-    // ====== DOM setup & events ======
-    document.addEventListener("DOMContentLoaded", () => {
-      const introScreen = document.getElementById("introScreen");
-      const enterBtn = document.getElementById("enterBtn");
-      const houses = document.querySelectorAll(".house");
-
-      const infoBadge = document.getElementById("infoBadge");
-      const infoTitle = document.getElementById("infoTitle");
-      const infoSubtitle = document.getElementById("infoSubtitle");
-      const infoContent = document.getElementById("infoContent");
-      const infoTabsContainer = document.querySelector(".info-tabs");
-
-      function openHouse(key) {
-        const data = houseContent[key];
-        if (!data) return;
-
-        // active state on houses
-        houses.forEach((h) => h.classList.remove("active"));
-        const activeHouse = document.querySelector(`.house[data-key="${key}"]`);
-        if (activeHouse) activeHouse.classList.add("active");
-
-        // update info panel
-        infoBadge.textContent = data.badge;
-        infoTitle.textContent = data.title;
-        infoSubtitle.textContent = data.subtitle;
-        infoContent.innerHTML = data.html;
-
-        // update chips
-        infoTabsContainer.innerHTML = "";
-        (data.chips || []).forEach((chip) => {
-          const span = document.createElement("div");
-          span.className = "info-chip";
-          span.textContent = chip;
-          infoTabsContainer.appendChild(span);
-        });
-      }
-
-=======
               <span class="project-meta">Comfortable writing scripts, functions, and working with data.</span>
             </li>
             <li>
@@ -866,7 +761,7 @@
             </li>
             <li>
               <strong>Machine Learning (learning)</strong>
-              <span class="project-meta">Starting with ML concepts and small projects. I’ll keep updating this as I build more.</span>
+              <span class="project-meta">Starting with ML concepts and small projects. I'll keep updating this as I build more.</span>
             </li>
           </ul>
         `,
@@ -874,17 +769,16 @@
       projects: {
         badge: "Projects House",
         title: "Projects (More Coming Soon)",
-        subtitle:
-          "I'm working on machine learning and data projects. This section will grow as I build more.",
+        subtitle: "I'm working on machine learning and data projects. This section will grow as I build more.",
         chips: ["Machine Learning", "Data"],
         html: `
-          <p class="info-tagline">I’m still building and polishing my projects.</p>
+          <p class="info-tagline">I'm still building and polishing my projects.</p>
           <ul>
             <li>
               <span class="project-title">Machine Learning Project (Coming Soon)</span>
               <span class="project-meta">Python • NumPy • Pandas • Matplotlib</span>
               <span class="project-meta">
-                A project to apply what I’m learning in ML. I’ll update this with details and a link soon.
+                A project to apply what I'm learning in ML. I'll update this with details and a link soon.
               </span>
               <span class="project-link">(Link will be added here later)</span>
             </li>
@@ -894,8 +788,7 @@
       about: {
         badge: "About House",
         title: "About George",
-        subtitle:
-          "A quick look at who I am, how I think, and what I'm aiming for.",
+        subtitle: "A quick look at who I am, how I think, and what I'm aiming for.",
         chips: ["Python Dev", "Data & ML"],
         html: `
           <p class="info-tagline">The cozy house where my story lives.</p>
@@ -944,18 +837,22 @@
         const data = houseContent[key];
         if (!data) return;
 
-        // active state on houses
+        // Remove active state from all houses
         houses.forEach((h) => h.classList.remove("active"));
+        
+        // Add active state to clicked house
         const activeHouse = document.querySelector(`.house[data-key="${key}"]`);
-        if (activeHouse) activeHouse.classList.add("active");
+        if (activeHouse) {
+          activeHouse.classList.add("active");
+        }
 
-        // update info panel
+        // Update info panel content
         infoBadge.textContent = data.badge;
         infoTitle.textContent = data.title;
         infoSubtitle.textContent = data.subtitle;
         infoContent.innerHTML = data.html;
 
-        // update chips
+        // Update chips
         infoTabsContainer.innerHTML = "";
         (data.chips || []).forEach((chip) => {
           const span = document.createElement("div");
@@ -963,24 +860,39 @@
           span.textContent = chip;
           infoTabsContainer.appendChild(span);
         });
+
+        console.log('Opened house:', key);
       }
 
->>>>>>> 5b5b8b9903d51dfcbe0fccb65bc9c241b365ab4c
-      // Intro button
+      // Intro button - hide intro screen
       enterBtn.addEventListener("click", () => {
         introScreen.classList.add("hidden");
+        console.log('Intro screen hidden');
       });
 
-      // House clicks
+      // House click handlers
       houses.forEach((house) => {
-        house.addEventListener("click", () => {
+        house.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           const key = house.getAttribute("data-key");
+          console.log('House clicked:', key);
           openHouse(key);
+        });
+        
+        // Add visual feedback
+        house.addEventListener("mousedown", () => {
+          house.style.transform = "translateY(-2px) scale(1.0)";
+        });
+        
+        house.addEventListener("mouseup", () => {
+          house.style.transform = "";
         });
       });
 
-      // Initial content
+      // Load initial content
       openHouse("skills");
+      console.log('Portfolio initialized');
     });
   </script>
 </body>

@@ -24,7 +24,7 @@ https://amazephoenix-bit.github.io/george-portfolio/
 Open that link in your browser to view the portfolio.
 
 ---
-
+''' 
 ## 🧩 Features
 
 - **Intro screen** with “Enter World” button  

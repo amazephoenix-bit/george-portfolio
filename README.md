@@ -9,22 +9,8 @@ Instead of a normal static page, you explore a tiny world with a character and t
 
 The goal of this project is to learn front-end structure while also having a fun way to present my Python / data skills.
 
----
-
-## 🔗 Live Demo
-
-GitHub Pages URL (after deployment):
-
-```text
-https://amazephoenix-bit.github.io/george-portfolio/
 
 
-
-
-Open that link in your browser to view the portfolio.
-
----
-''' 
 ## 🧩 Features
 
 - **Intro screen** with “Enter World” button  
@@ -182,4 +168,21 @@ GitHub: https://github.com/amazephoenix-bit
 
 ---
 
-If you want, I can also generate a **professional LinkedIn description** or a **portfolio “About Me” paragraph** to match your style.
+
+
+
+---
+
+## 🔗 Live Demo
+
+GitHub Pages URL (after deployment):
+
+```text
+https://amazephoenix-bit.github.io/george-portfolio/
+
+
+
+
+Open that link in your browser to view the portfolio.
+
+---

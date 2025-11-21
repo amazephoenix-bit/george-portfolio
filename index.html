@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>George CA – Game Portfolio</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1f2937, #020617 55%);
+      color: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .game-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      min-height: 620px;
+      border-radius: 26px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #020617 0%, #020617 45%, #0b1220 100%);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    /* Intro screen */
+    .intro-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.65), rgba(15, 23, 42, 0.98));
+      z-index: 10;
+      padding: 24px;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .intro-title {
+      font-size: clamp(1.9rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .intro-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      max-width: 420px;
+      margin: 0 auto 18px;
+    }
+
+    .intro-chip {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .start-btn {
+      margin-top: 10px;
+      padding: 12px 28px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e, #0ea5e9);
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+      transition: transform 0.15s ease-out, box-shadow 0.15s ease-out,
+        filter 0.15s ease-out;
+    }
+
+    .start-btn span {
+      font-size: 1.2rem;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 14px 30px rgba(14, 165, 233, 0.55);
+      filter: brightness(1.05);
+    }
+
+    .start-btn:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 8px 18px rgba(15, 118, 110, 0.4);
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      opacity: 0.75;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* HUD / header inside the game */
+    .hud {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .hud-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hud-name {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .hud-role {
+      font-size: 0.85rem;
+      opacity: 0.75;
+    }
+
+    .hud-pill {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .hud-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+    }
+
+    /* Scene */
+    .scene {
+      position: absolute;
+      inset: 0;
+      padding: 70px 16px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.2fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 800px) {
+      .scene {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 55% 45%;
+      }
+    }
+
+    /* World / houses side */
+    .world {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #1d283a, #020617 70%);
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      box-shadow: inset 0 0 50px rgba(15, 23, 42, 0.85);
+    }
+
+    .sky-stars::before,
+    .sky-stars::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(#fbbf24 1px, transparent 0),
+        radial-gradient(#93c5fd 1px, transparent 0),
+        radial-gradient(#a5b4fc 1px, transparent 0);
+      background-size: 120px 120px, 140px 140px, 160px 160px;
+      background-position: 0 0, 20px 40px, 60px 20px;
+      opacity: 0.5;
+    }
+
+    .sky-stars::after {
+      opacity: 0.25;
+      filter: blur(1px);
+    }
+
+    .moon {
+      position: absolute;
+      top: 24px;
+      right: 26px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fde68a, #fbbf24);
+      box-shadow: 0 0 32px rgba(251, 191, 36, 0.65);
+    }
+
+    .ground {
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      height: 38%;
+      background: linear-gradient(180deg, #064e3b, #022c22);
+      border-top: 1px solid rgba(16, 185, 129, 0.6);
+      box-shadow: 0 -12px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .ground-strip {
+      position: absolute;
+      inset-inline: 8%;
+      bottom: 14%;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, #022c22, #052e16);
+      border: 1px solid rgba(21, 128, 61, 0.7);
+      box-shadow: 0 8px 20px rgba(6, 95, 70, 0.7);
+    }
+
+    .houses-row {
+      position: absolute;
+      bottom: 18%;
+      inset-inline: 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .houses-row {
+        inset-inline: 10%;
+        gap: 6px;
+      }
+    }
+
+    .house {
+      position: relative;
+      width: 30%;
+      max-width: 180px;
+      min-width: 120px;
+      background: linear-gradient(180deg, #1f2937, #020617);
+      border-radius: 16px 16px 18px 18px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.8);
+      padding: 28px 10px 12px;
+      cursor: pointer;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out,
+        border-color 0.18s ease-out, background 0.18s ease-out;
+      text-align: center;
+    }
+
+    .house::before {
+      content: "";
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-bottom: 26px solid #1f2937;
+      filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.7));
+    }
+
+    .house-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      opacity: 0.82;
+    }
+
+    .house-tag {
+      margin-top: 4px;
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+
+    .house-door {
+      width: 34px;
+      height: 40px;
+      border-radius: 16px;
+      margin: 10px auto 0;
+      background: linear-gradient(180deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      position: relative;
+    }
+
+    .house-door::after {
+      content: "";
+      position: absolute;
+      right: 7px;
+      top: 52%;
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: #eab308;
+      box-shadow: 0 0 7px rgba(234, 179, 8, 0.7);
+    }
+
+    .house.active {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(56, 189, 248, 0.95);
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      box-shadow: 0 16px 30px rgba(56, 189, 248, 0.45);
+    }
+
+    .house.active::before {
+      border-bottom-color: #0f172a;
+    }
+
+    .house:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.9);
+    }
+
+    /* Character */
+    .character {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      z-index: 2;
+      animation: float 2.4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translate(-50%, 0);
+      }
+      50% {
+        transform: translate(-50%, -4px);
+      }
+    }
+
+    .character-body {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 20%, #0ea5e9, #1d4ed8);
+      border: 2px solid #bfdbfe;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 18px rgba(37, 99, 235, 0.7);
+    }
+
+    .character-face {
+      position: relative;
+      width: 26px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 5px;
+    }
+
+    .eye {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .eye::after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: #020617;
+    }
+
+    .character-shadow {
+      width: 50px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.65);
+      filter: blur(4px);
+    }
+
+    .character-name-tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      margin-bottom: 4px;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      background: rgba(15, 23, 42, 0.95);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      white-space: nowrap;
+    }
+
+    /* Info panel */
+    .info-panel {
+      border-radius: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: radial-gradient(circle at top left, #0f172a, #020617);
+      padding: 16px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 900px) {
+      .info-panel {
+        padding: 18px 18px 18px;
+      }
+    }
+
+    .info-glow {
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.24), transparent 60%);
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    .info-header {
+      position: relative;
+      z-index: 1;
+    }
+
+    .info-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .info-subtitle {
+      font-size: 0.86rem;
+      opacity: 0.8;
+    }
+
+    .info-tabs {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .info-chip {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+      opacity: 0.9;
+    }
+
+    .info-content {
+      position: relative;
+      z-index: 1;
+      margin-top: 4px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(75, 85, 99, 0.7);
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 3px;
+    }
+
+    .info-content ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 6px;
+      font-size: 0.86rem;
+    }
+
+    .info-content li {
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .info-tagline {
+      font-size: 0.8rem;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0.9;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #38bdf8;
+    }
+
+    .project-title {
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    .project-meta {
+      font-size: 0.78rem;
+      opacity: 0.8;
+    }
+
+    .project-link {
+      font-size: 0.78rem;
+      margin-top: 2px;
+      opacity: 0.9;
+    }
+
+    .project-link a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+
+    .project-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Scrollbar styling for info panel */
+    .info-content::-webkit-scrollbar {
+      width: 5px;
+    }
+    .info-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .info-content::-webkit-scrollbar-thumb {
+      background: rgba(55, 65, 81, 0.9);
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-wrapper">
+    <!-- Intro screen -->
+    <div class="intro-screen" id="introScreen">
+      <div class="intro-chip">Welcome to</div>
+      <div class="intro-title">George CA Portfolio</div>
+      <p class="intro-subtitle">
+        Explore a tiny world where each house shows my skills, projects, and story.
+        Click <strong>Enter World</strong> and then tap a house to start.
+      </p>
+      <button class="start-btn" id="enterBtn">
+        <span>▶</span> Enter World
+      </button>
+      <div class="hint">Tip: Try clicking the Skills, Projects, and About houses.</div>
+    </div>
+
+    <!-- HUD -->
+    <header class="hud">
+      <div class="hud-left">
+        <div class="hud-name">George CA</div>
+        <div class="hud-role">Developer • Designer • Learner</div>
+      </div>
+      <div class="hud-pill">
+        <div class="hud-pill-dot"></div>
+        Portfolio World v1.0
+      </div>
+    </header>
+
+    <!-- Scene -->
+    <section class="scene">
+      <!-- World with houses -->
+      <div class="world sky-stars">
+        <div class="moon"></div>
+        <div class="ground"></div>
+        <div class="ground-strip"></div>
+
+        <div class="houses-row">
+          <div class="house active" data-key="skills">
+            <div class="house-label">Skills House</div>
+            <div class="house-tag">Tech & tools I use</div>
+            <div class="house-door"></div>
+          </div>
+
+          <div class="house" data-key="projects">
+            <div class="house-label">Projects House</div>
+            <div class="house-tag">Things I've built</div>
+            <div class="house-door"></div>
+          </div>
+
+          <div class="house" data-key="about">
+            <div class="house-label">About House</div>
+            <div class="house-tag">Who I am & goals</div>
+            <div class="house-door"></div>
+          </div>
+        </div>
+
+        <!-- Character -->
+        <div class="character">
+          <div class="tooltip">Click a house to explore</div>
+          <div class="character-name-tag">George</div>
+          <div class="character-body">
+            <div class="character-face">
+              <div class="eye"></div>
+              <div class="eye"></div>
+            </div>
+          </div>
+          <div class="character-shadow"></div>
+        </div>
+      </div>
+
+      <!-- Info panel -->
+      <aside class="info-panel">
+        <div class="info-glow"></div>
+
+        <div class="info-header">
+          <div class="badge">
+            <div class="badge-dot"></div>
+            <span id="infoBadge">Skills House</span>
+          </div>
+          <h2 class="info-title" id="infoTitle">Skills & Stack</h2>
+          <p class="info-subtitle" id="infoSubtitle">
+            These are the main technologies and tools I work with right now.
+          </p>
+          <div class="info-tabs">
+            <div class="info-chip">Frontend</div>
+            <div class="info-chip">Backend</div>
+            <div class="info-chip">Tools</div>
+          </div>
+        </div>
+
+        <div class="info-content" id="infoContent">
+          <!-- Filled by JavaScript -->
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    // ====== Content for each house (EDIT THIS WITH YOUR REAL INFO) ======
+   const houseContent = {
+  skills: {
+    badge: "Skills House",
+    title: "Skills & Stack",
+    subtitle:
+      "These are the main technologies and tools I work with right now.",
+    chips: ["Python", "Data Analysis", "Visualization"],
+    html: `
+      <p class="info-tagline">My main focus is Python and data-related work.</p>
+      <ul>
+        <li>
+          <strong>Python</strong>
+          <span class="project-meta">Comfortable writing scripts, functions, and working with data.</span>
+        </li>
+        <li>
+          <strong>NumPy</strong>
+          <span class="project-meta">Working with arrays, numerical operations, basic linear algebra.</span>
+        </li>
+        <li>
+          <strong>Pandas</strong>
+          <span class="project-meta">DataFrames, cleaning data, filtering, grouping, basic analysis.</span>
+        </li>
+        <li>
+          <strong>Matplotlib</strong>
+          <span class="project-meta">Creating basic plots, line charts, bar charts, and visualizing data.</span>
+        </li>
+        <li>
+          <strong>Seaborn</strong>
+          <span class="project-meta">(If you're learning this) Nicer statistical visualizations on top of Matplotlib.</span>
+        </li>
+        <li>
+          <strong>Machine Learning (learning)</strong>
+          <span class="project-meta">Starting with ML concepts and small projects. I’ll keep updating this as I build more.</span>
+        </li>
+      </ul>
+    `,
+  },
+  projects: {
+    badge: "Projects House",
+    title: "Projects (More Coming Soon)",
+    subtitle:
+      "I'm working on machine learning and data projects. This section will grow as I build more.",
+    chips: ["Machine Learning", "Data"],
+    html: `
+      <p class="info-tagline">I’m still building and polishing my projects.</p>
+      <ul>
+        <li>
+          <span class="project-title">Machine Learning Project (Coming Soon)</span>
+          <span class="project-meta">Python • NumPy • Pandas • Matplotlib</span>
+          <span class="project-meta">
+            A project to apply what I’m learning in ML. I’ll update this with details and a link soon.
+          </span>
+          <span class="project-link">(Link will be added here later)</span>
+        </li>
+      </ul>
+    `,
+  },
+  about: {
+    badge: "About House",
+    title: "About George",
+    subtitle:
+      "A quick look at who I am, how I think, and what I'm aiming for.",
+    chips: ["Python Dev", "Data & ML"],
+    html: `
+      <p class="info-tagline">The cozy house where my story lives.</p>
+      <ul>
+        <li>
+          <strong>Who I am</strong>
+          <span class="project-meta">
+            A learner focused on Python, data analysis, and starting with machine learning.
+          </span>
+        </li>
+        <li>
+          <strong>How I think</strong>
+          <span class="project-meta">
+            I like understanding data, visualizing it clearly, and improving step by step.
+          </span>
+        </li>
+        <li>
+          <strong>What I'm building towards</strong>
+          <span class="project-meta">
+            Getting better at real-world ML and data projects, and building a strong portfolio.
+          </span>
+        </li>
+        <li>
+          <strong>Contact</strong>
+          <span class="project-meta">Email: [add your email here]</span>
+          <span class="project-meta">GitHub / LinkedIn: [add your links here]</span>
+        </li>
+      </ul>
+    `,
+  },
+
+};
+
+
+    // ====== DOM elements ======
+    const introScreen = document.getElementById("introScreen");
+    const enterBtn = document.getElementById("enterBtn");
+    const houses = document.querySelectorAll(".house");
+
+    const infoBadge = document.getElementById("infoBadge");
+    const infoTitle = document.getElementById("infoTitle");
+    const infoSubtitle = document.getElementById("infoSubtitle");
+    const infoContent = document.getElementById("infoContent");
+    const infoTabsContainer = document.querySelector(".info-tabs");
+
+    // ====== Functions ======
+    function openHouse(key) {
+      const data = houseContent[key];
+      if (!data) return;
+
+      // active state on houses
+      houses.forEach((h) => h.classList.remove("active"));
+      const activeHouse = document.querySelector(`.house[data-key="${key}"]`);
+      if (activeHouse) activeHouse.classList.add("active");
+
+      // update info panel
+      infoBadge.textContent = data.badge;
+      infoTitle.textContent = data.title;
+      infoSubtitle.textContent = data.subtitle;
+      infoContent.innerHTML = data.html;
+
+      // update chips
+      infoTabsContainer.innerHTML = "";
+      (data.chips || []).forEach((chip) => {
+        const span = document.createElement("div");
+        span.className = "info-chip";
+        span.textContent = chip;
+        infoTabsContainer.appendChild(span);
+      });
+    }
+
+    // ====== Events ======
+    enterBtn.addEventListener("click", () => {
+      introScreen.classList.add("hidden");
+    });
+
+    houses.forEach((house) => {
+      house.addEventListener("click", () => {
+        const key = house.getAttribute("data-key");
+        openHouse(key);
+      });
+    });
+
+    // Set initial house content
+    openHouse("skills");
+  </script>
+</body>
+</html>
+
